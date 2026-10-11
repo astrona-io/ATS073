@@ -1,0 +1,107 @@
+version: 1
+approval: OTCA requested 2026-10-11; established reading-only scope
+course:
+  id: ATS073
+  certification:
+    name: OpenTelemetry Certified Associate
+    code: OTCA
+    provider: CNCF / Linux Foundation
+    domain: Fundamentals of Observability
+    weight: 18
+    competencies:
+    - Telemetry Data
+    - Semantic Conventions
+    - Instrumentation
+    - Analysis and Outcomes
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: Telemetry Data
+  curriculum_item: Telemetry Data
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Telemetry Signals, Resource Identity And Evidence Limits
+    objectives:
+    - Distinguish traces, metrics and logs by the questions they answer.
+    - Explain resource identity and signal correlation.
+    - Identify sampling, cardinality and collection gaps in evidence.
+    outline:
+    - Telemetry Signals, Resource Identity And Evidence Limits
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+      adapted_from: null
+- id: section-020
+  title: Semantic Conventions
+  curriculum_item: Semantic Conventions
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Semantic Conventions, Attribute Meaning And Stability
+    objectives:
+    - Explain semantic conventions as shared telemetry contracts.
+    - Distinguish resource attributes from operation attributes.
+    - Reason about attribute stability, cardinality and privacy.
+    outline:
+    - Semantic Conventions, Attribute Meaning And Stability
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
+      adapted_from: null
+- id: section-030
+  title: Instrumentation
+  curriculum_item: Instrumentation
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: API Calls, Automatic Instrumentation And Measurement Design
+    objectives:
+    - Distinguish manual instrumentation from automatic instrumentation.
+    - Explain API, SDK and exporter responsibilities.
+    - Select useful boundaries without duplicate or sensitive telemetry.
+    outline:
+    - API Calls, Automatic Instrumentation And Measurement Design
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
+      adapted_from: null
+- id: section-040
+  title: Analysis and Outcomes
+  curriculum_item: Analysis and Outcomes
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Service Indicators, Objectives, Agreements And Budgets
+    objectives:
+    - Distinguish an SLI, SLO and SLA.
+    - Define good and valid event populations and an evaluation window.
+    - Calculate an error budget and interpret burn rate.
+    - Account for low traffic, exclusions and incomplete observation.
+    - Choose panels for rate, duration, errors and saturation.
+    - Explain time range, resolution and units.
+    - Preserve grouping and denominator context.
+    - Distinguish display gaps from measured zero and alert evaluation.
+    outline:
+    - Service Indicators, Objectives, Agreements And Budgets
+    - Dashboards That Explain Population, Units And Gaps
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-040/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
+      adapted_from: ATS047/sections/section-060/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
+    - reading: sections/section-040/module-01/course-02-dashboards-that-explain-population-units-and-gaps.md
+      adapted_from: ATS051/sections/section-010/module-01/course-01-dashboards-that-explain-population-units-and-gaps.md
