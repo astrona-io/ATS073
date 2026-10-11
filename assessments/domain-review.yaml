@@ -1,0 +1,243 @@
+schema_version: 1
+kind: question_bank
+id: ats073-domain-review
+course_id: ATS073
+exam_code: OTCA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Fundamentals of Observability
+placement:
+  position: after
+  reading: sections/section-040/module-01/course-03-summary.md
+questions:
+- id: ats073-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish traces, metrics and logs by the questions they answer.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Which signal most directly connects operations along a request path?
+  options:
+  - id: a
+    text: A catalog display title.
+    explanation: It is software metadata rather than telemetry.
+  - id: b
+    text: A trace assembled from related spans.
+    explanation: Spans describe timed operations and their relationships.
+  - id: c
+    text: A single aggregate CPU gauge.
+    explanation: It does not identify the request path.
+  correct_option: b
+  explanation: Spans describe timed operations and their relationships.
+- id: ats073-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain resource identity and signal correlation.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Why attach resource identity to telemetry?
+  options:
+  - id: a
+    text: To identify the producing service and environment consistently.
+    explanation: It supports meaningful grouping and correlation.
+  - id: b
+    text: To make every metric a complete request trace.
+    explanation: Signal models remain different.
+  - id: c
+    text: To authorize all backend actions.
+    explanation: Identity attributes do not grant permission.
+  correct_option: a
+  explanation: It supports meaningful grouping and correlation.
+- id: ats073-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Identify sampling, cardinality and collection gaps in evidence.
+  source_readings:
+  - sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
+  prompt: Why is an absent span insufficient to prove an operation never ran?
+  options:
+  - id: a
+    text: Every span always reaches every backend.
+    explanation: Delivery is not universally guaranteed.
+  - id: b
+    text: Logs automatically recreate every discarded span.
+    explanation: Signals do not provide automatic reconstruction.
+  - id: c
+    text: Sampling or collection loss may hide it.
+    explanation: The observation path has its own limits.
+  correct_option: c
+  explanation: The observation path has its own limits.
+- id: ats073-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain semantic conventions as shared telemetry contracts.
+  source_readings:
+  - sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
+  prompt: What problem do semantic conventions address?
+  options:
+  - id: a
+    text: Automatic permission to disclose customer data.
+    explanation: Conventions do not grant that permission.
+  - id: b
+    text: Inconsistent names and meanings across telemetry producers.
+    explanation: Shared contracts improve interpretation.
+  - id: c
+    text: Automatic storage of every request forever.
+    explanation: Retention is a backend policy.
+  correct_option: b
+  explanation: Shared contracts improve interpretation.
+- id: ats073-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish resource attributes from operation attributes.
+  source_readings:
+  - sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
+  prompt: Which value most naturally describes a resource?
+  options:
+  - id: a
+    text: The service identity producing telemetry.
+    explanation: It identifies the producer.
+  - id: b
+    text: The status of one individual HTTP response.
+    explanation: That describes a particular operation.
+  - id: c
+    text: The text of one exception message.
+    explanation: That is event data.
+  correct_option: a
+  explanation: It identifies the producer.
+- id: ats073-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Reason about attribute stability, cardinality and privacy.
+  source_readings:
+  - sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
+  prompt: Why avoid a unique customer identifier as a metric attribute by default?
+  options:
+  - id: a
+    text: Metric attributes never affect series count.
+    explanation: They define dimensions.
+  - id: b
+    text: Standard naming automatically anonymizes every value.
+    explanation: Naming does not anonymize data.
+  - id: c
+    text: It can create unbounded cardinality and disclose sensitive information.
+    explanation: Each distinct combination can expand the data population.
+  correct_option: c
+  explanation: Each distinct combination can expand the data population.
+- id: ats073-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish manual instrumentation from automatic instrumentation.
+  source_readings:
+  - sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
+  prompt: Which observation commonly needs manual application instrumentation?
+  options:
+  - id: a
+    text: The Collector's configuration file syntax.
+    explanation: That is collector configuration rather than application instrumentation.
+  - id: b
+    text: A business-specific decision not represented by a framework hook.
+    explanation: The application owns that meaning.
+  - id: c
+    text: Every supported HTTP client operation in every case.
+    explanation: A compatible automatic instrumentor may cover it.
+  correct_option: b
+  explanation: The application owns that meaning.
+- id: ats073-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain API, SDK and exporter responsibilities.
+  source_readings:
+  - sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
+  prompt: What primarily implements telemetry recording and export behavior?
+  options:
+  - id: a
+    text: The configured SDK and its pipeline components.
+    explanation: The API is the interface, while the SDK supplies implementation.
+  - id: b
+    text: The API package alone regardless of installed implementation.
+    explanation: An API can exist without a recording SDK.
+  - id: c
+    text: A catalog annotation containing the exporter name.
+    explanation: Metadata does not initialize a pipeline.
+  correct_option: a
+  explanation: The API is the interface, while the SDK supplies implementation.
+- id: ats073-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Select useful boundaries without duplicate or sensitive telemetry.
+  source_readings:
+  - sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
+  prompt: Why review automatic and manual coverage together?
+  options:
+  - id: a
+    text: Automatic instrumentation cannot ever create a span.
+    explanation: Creating spans is a normal capability.
+  - id: b
+    text: Manual instrumentation automatically redacts all values.
+    explanation: Data minimization must be deliberate.
+  - id: c
+    text: Overlapping instrumentation can duplicate observations.
+    explanation: Coverage needs coherent boundaries.
+  correct_option: c
+  explanation: Coverage needs coherent boundaries.
+- id: ats073-domain-review-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish an SLI, SLO and SLA.
+  source_readings:
+  - sections/section-040/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
+  prompt: What is an SLO?
+  options:
+  - id: a
+    text: Automatically a legal penalty clause.
+    explanation: An SLA has a separate agreement contract.
+  - id: b
+    text: A target for a defined service indicator over a specified window.
+    explanation: It turns measurement into an operational objective.
+  - id: c
+    text: Every raw scrape sample.
+    explanation: Samples are inputs to measurement.
+  correct_option: b
+  explanation: It turns measurement into an operational objective.
+- id: ats073-domain-review-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Define good and valid event populations and an evaluation window.
+  source_readings:
+  - sections/section-040/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
+  prompt: Why define valid events?
+  options:
+  - id: a
+    text: They establish the denominator of the indicator.
+    explanation: Good outcomes need a coherent reference population.
+  - id: b
+    text: They make all requests successful automatically.
+    explanation: Definitions do not alter outcomes.
+  - id: c
+    text: They eliminate all missing data.
+    explanation: Observation coverage remains a limitation.
+  correct_option: a
+  explanation: Good outcomes need a coherent reference population.
+- id: ats073-domain-review-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Calculate an error budget and interpret burn rate.
+  source_readings:
+  - sections/section-040/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
+  prompt: A target allows 0.1% failures and observation shows 1%. What is the conceptual burn rate?
+  options:
+  - id: a
+    text: Exactly one failed request universally.
+    explanation: The event count depends on the population.
+  - id: b
+    text: One percent of the scrape interval.
+    explanation: Scrape timing is not that budget calculation.
+  - id: c
+    text: Ten times the allowed fraction.
+    explanation: One percent divided by one-tenth of a percent is ten.
+  correct_option: c
+  explanation: One percent divided by one-tenth of a percent is ten.
