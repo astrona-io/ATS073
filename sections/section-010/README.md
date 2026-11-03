@@ -18,6 +18,10 @@ This section teaches you what the three OpenTelemetry signals record, how a piec
 - Read the `debug` exporter output of a Collector and find the signal, the resource attributes and the items.
 - Add a pipeline for a missing signal and set resource attributes with the `resource` processor.
 - Explain how sampling, cardinality and collection gaps limit what telemetry proves.
+- Explain span context, parent-child structure and propagation.
+- Choose span kind, status, events and links.
+- Compare head sampling and tail sampling and configure tail sampling in a Collector.
+- State what a set of sampled traces can and cannot prove.
 
 ---
 
@@ -32,6 +36,18 @@ This section teaches you what the three OpenTelemetry signals record, how a piec
 *   **Lab:** `sections/section-010/module-01/labs/lab-01` (UNTESTED)
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-01/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 2. Traces In Depth: Spans, Context And Sampling Decisions
+*   **Module Reader:** **Module 2: Traces In Depth: Spans, Context And Sampling Decisions**
+*   **Hands-on Playground:** `sections/section-010/module-02/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-02/playground
+    ```
+*   **Lab:** `sections/section-010/module-02/labs/lab-01` (UNTESTED). Replace a head sampler with tail sampling in a Collector.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-02/labs/lab-01
     astrona submit -c .
     ```
 

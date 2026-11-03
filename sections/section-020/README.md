@@ -17,6 +17,10 @@ This section teaches you how OpenTelemetry gives attribute names, values and uni
 - Distinguish resource attributes from span, log and data point attributes, and place an attribute on the right one.
 - Explain why a value that is different for every customer is a poor metric attribute and a privacy risk.
 - Rename, copy and delete attributes with the `attributes` processor, and explain why the order of the actions matters.
+- Apply the naming rules, namespaces and requirement levels.
+- Use the HTTP, RPC, database and messaging conventions.
+- Place Kubernetes and cloud attributes on the resource and keep custom attributes in a team namespace.
+- Rename and sanitize attributes with the transform processor.
 
 ---
 
@@ -31,6 +35,18 @@ This section teaches you how OpenTelemetry gives attribute names, values and uni
 *   **Lab:** `sections/section-020/module-01/labs/lab-01` (UNTESTED)
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-01/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 2. Semantic Conventions By Signal And Domain
+*   **Module Reader:** **Module 2: Semantic Conventions By Signal And Domain**
+*   **Hands-on Playground:** `sections/section-020/module-02/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-02/playground
+    ```
+*   **Lab:** `sections/section-020/module-02/labs/lab-01` (UNTESTED). Rename database attributes and remove literal values from query text with the transform processor.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-02/labs/lab-01
     astrona submit -c .
     ```
 

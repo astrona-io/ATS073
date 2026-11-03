@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orders-app
+  namespace: starfleet
+data:
+  app.py: |
+    import os
+    import random
+    import time
+
+    from opentelemetry import metrics, trace
+    from opentelemetry.trace import SpanKind, Status, StatusCode
+
+    tracer = trace.get_tracer("starfleet.orders", "1.4.0")
+    meter = metrics.get_meter("starfleet.orders", "1.4.0")
+    processed = meter.create_counter("orders.processed", unit="{order}", description="Orders processed")
+    duration = meter.create_histogram("orders.duration", unit="s", description="Time to process an order")
+
+
+    def reserve_stock(items):
+        with tracer.start_as_current_span("reserve-stock") as span:
+            span.set_attribute("order.items", items)
+            if items > 4:
+                raise ValueError("not enough stock")
+            time.sleep(0.05)
+
+
+    while True:
+        items = random.randint(1, 5)
+        started = time.monotonic()
+        with tracer.start_as_current_span("process-order", kind=SpanKind.SERVER) as span:
+            span.set_attribute("order.items", items)
+            try:
+                reserve_stock(items)
+                outcome = "accepted"
+            except ValueError as error:
+                span.record_exception(error)
+                span.set_status(Status(StatusCode.ERROR, str(error)))
+                outcome = "rejected"
+        processed.add(1, {"order.outcome": outcome})
+        duration.record(time.monotonic() - started, {"order.outcome": outcome})
+        time.sleep(1)

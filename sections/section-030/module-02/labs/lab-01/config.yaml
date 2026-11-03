@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Fix Manual Instrumentation In Code (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-030-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - python:3.13-slim
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector and the instrumented program with wrong exporter settings"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not change the Collector. Change only the code in the ConfigMap orders-app."
+    - name: program-unchanged
+      description: "The Deployment keeps its image, its launcher and the tracer scope"
+      type: file
+      source: validation/validate-program-unchanged.sh
+      hint: "Edit only app.py in the ConfigMap. Keep get_tracer with the name starfleet.orders."
+    - name: server-kind
+      description: "process-order spans have the kind Server"
+      type: file
+      source: validation/validate-server-kind.sh
+      hint: "Pass kind=SpanKind.SERVER to start_as_current_span. Restart the Deployment and wait about a minute."
+    - name: failure-recorded
+      description: "A process-order span has the status Error and an exception event"
+      type: file
+      source: validation/validate-failure-recorded.sh
+      hint: "In the except block, call span.record_exception(error) and span.set_status(Status(StatusCode.ERROR, str(error)))."
+    - name: histogram-arrives
+      description: "The metric orders.duration arrives as a histogram with the unit s and the attribute order.outcome"
+      type: file
+      source: validation/validate-histogram-arrives.sh
+      hint: "Create the histogram once with meter.create_histogram and call record in every loop."
+
+teardown:
+  keepCluster: false

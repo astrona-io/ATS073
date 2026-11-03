@@ -1,0 +1,228 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: observability
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+      evaluation_interval: 5s
+    scrape_configs:
+      - job_name: bridge
+        static_configs:
+          - targets: ['bridge-metrics.observability:8080']
+      - job_name: shuttle
+        static_configs:
+          - targets: ['shuttle-metrics.observability:8080']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:v3.15.1
+          args:
+            - --config.file=/etc/prometheus/prometheus.yml
+            - --storage.tsdb.path=/prometheus
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus
+            - name: storage
+              mountPath: /prometheus
+      volumes:
+        - name: config
+          configMap:
+            name: prometheus-config
+        - name: storage
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+  namespace: observability
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bridge-metrics-data
+  namespace: observability
+data:
+  metrics: |
+    # HELP http_requests_total Total HTTP requests handled.
+    # TYPE http_requests_total counter
+    http_requests_total{service="bridge",route="/orders",code="200"} 91200
+    http_requests_total{service="bridge",route="/orders",code="201"} 4300
+    http_requests_total{service="bridge",route="/orders",code="301"} 500
+    http_requests_total{service="bridge",route="/orders",code="404"} 2100
+    http_requests_total{service="bridge",route="/orders",code="429"} 600
+    http_requests_total{service="bridge",route="/orders",code="500"} 310
+    http_requests_total{service="bridge",route="/orders",code="503"} 190
+    http_requests_total{service="bridge",route="/status",code="200"} 20000
+    http_requests_total{service="bridge",route="/status",code="503"} 40
+    # HELP bridge_worker_utilization_ratio Share of worker threads in use.
+    # TYPE bridge_worker_utilization_ratio gauge
+    bridge_worker_utilization_ratio 0.62
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bridge-metrics-nginx
+  namespace: observability
+data:
+  default.conf: |
+    server {
+      listen 8080;
+      location /metrics {
+        default_type text/plain;
+        alias /data/metrics;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridge-metrics
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridge-metrics
+  template:
+    metadata:
+      labels:
+        app: bridge-metrics
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.31.8-alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: data
+          configMap:
+            name: bridge-metrics-data
+        - name: conf
+          configMap:
+            name: bridge-metrics-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bridge-metrics
+  namespace: observability
+spec:
+  selector:
+    app: bridge-metrics
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shuttle-metrics-data
+  namespace: observability
+data:
+  metrics: |
+    # HELP http_request_duration_seconds Request duration.
+    # TYPE http_request_duration_seconds histogram
+    http_request_duration_seconds_bucket{service="shuttle",le="0.1"} 12000
+    http_request_duration_seconds_bucket{service="shuttle",le="0.3"} 18400
+    http_request_duration_seconds_bucket{service="shuttle",le="0.5"} 19500
+    http_request_duration_seconds_bucket{service="shuttle",le="1"} 19900
+    http_request_duration_seconds_bucket{service="shuttle",le="+Inf"} 20000
+    http_request_duration_seconds_sum{service="shuttle"} 3500.7
+    http_request_duration_seconds_count{service="shuttle"} 20000
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shuttle-metrics-nginx
+  namespace: observability
+data:
+  default.conf: |
+    server {
+      listen 8080;
+      location /metrics {
+        default_type text/plain;
+        alias /data/metrics;
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuttle-metrics
+  namespace: observability
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuttle-metrics
+  template:
+    metadata:
+      labels:
+        app: shuttle-metrics
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.31.8-alpine
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: conf
+              mountPath: /etc/nginx/conf.d
+      volumes:
+        - name: data
+          configMap:
+            name: shuttle-metrics-data
+        - name: conf
+          configMap:
+            name: shuttle-metrics-nginx
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shuttle-metrics
+  namespace: observability
+spec:
+  selector:
+    app: shuttle-metrics
+  ports:
+    - port: 8080
+      targetPort: 8080

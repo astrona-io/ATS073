@@ -8,10 +8,10 @@ Concept lessons explain each official objective through mechanisms, diagrams and
 
 | Section | Objective | Modules | Tools used in the labs |
 | --- | --- | --- | --- |
-| 010 | Telemetry Data | 1 + capstone | OpenTelemetry Collector, `telemetrygen`, `debug` exporter |
-| 020 | Semantic Conventions | 1 + capstone | Collector `attributes` processor |
-| 030 | Instrumentation | 1 + capstone | `opentelemetry-instrument`, `OTEL_*` environment variables |
-| 040 | Analysis and Outcomes | 1 + capstone | Prometheus, PromQL |
+| 010 | Telemetry Data | 2 + capstone | OpenTelemetry Collector, `telemetrygen`, `debug` exporter, `tail_sampling` processor |
+| 020 | Semantic Conventions | 2 + capstone | Collector `attributes` and `transform` processors |
+| 030 | Instrumentation | 2 + capstone | `opentelemetry-instrument`, `OTEL_*` environment variables, OpenTelemetry Python API |
+| 040 | Analysis and Outcomes | 2 + capstone | Prometheus, PromQL, recording rules |
 
 See [the curriculum map](CURRICULUM.md) for module outcomes. The manifest `astrona.yaml` registers readings, labs and quizzes in teaching order.
 

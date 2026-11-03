@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Keep Error Traces With Tail Sampling (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-010-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector with a 10 percent head sampler and the load generator"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not delete or replace the Deployment. Change only the ConfigMap, then restart the Deployment."
+    - name: tail-sampling-configured
+      description: "The traces pipeline uses tail_sampling with an ERROR policy and a probabilistic policy, and no head sampler"
+      type: file
+      source: validation/validate-tail-sampling-configured.sh
+      hint: "Define the tail_sampling processor with two policies and list it in the traces pipeline instead of probabilistic_sampler. Write the list in flow style."
+    - name: other-pipelines-intact
+      description: "The otlp receiver, the debug exporter and the traces pipeline wiring are intact"
+      type: file
+      source: validation/validate-other-pipelines-intact.sh
+      hint: "Keep the receiver and the exporter as they were. The pipeline reads from otlp and exports to debug."
+    - name: errors-kept
+      description: "The running Collector exports a large share of error spans"
+      type: file
+      source: validation/validate-errors-kept.sh
+      hint: "Restart the Collector after you change the ConfigMap. Wait 60 seconds and read the log again."
+    - name: success-traces-reduced
+      description: "Successful traces are sampled down"
+      type: file
+      source: validation/validate-success-traces-reduced.sh
+      hint: "Keep a probabilistic policy at 10 percent for the traces that are not errors."
+    - name: generator-unchanged
+      description: "The shuttle-load Deployment still has its two containers and its original image"
+      type: file
+      source: validation/validate-generator-unchanged.sh
+      hint: "Fix the Collector. Do not edit shuttle-load."
+
+teardown:
+  keepCluster: false

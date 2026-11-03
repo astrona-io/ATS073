@@ -19,6 +19,10 @@ This section teaches you how telemetry becomes a decision. You will define servi
 - Build a latency SLI from the cumulative buckets of a histogram.
 - Check scrape health with `up` and `absent`, and tell a display gap from a measured zero.
 - Choose panels for rate, errors, duration and saturation, and keep time range, units, grouping and denominator visible.
+- Describe the RED method and the USE method.
+- Name the four golden signals and choose the method that fits a component.
+- Write PromQL for rate, errors, latency and utilization.
+- Save a query as a recording rule and load it into Prometheus.
 
 ---
 
@@ -33,6 +37,18 @@ This section teaches you how telemetry becomes a decision. You will define servi
 *   **Lab:** `sections/section-040/module-01/labs/lab-01` (UNTESTED)
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-01/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 2. RED, USE And The Four Golden Signals
+*   **Module Reader:** **Module 2: RED, USE And The Four Golden Signals**
+*   **Hands-on Playground:** `sections/section-040/module-02/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-02/playground
+    ```
+*   **Lab:** `sections/section-040/module-02/labs/lab-01` (UNTESTED). Record the request total, an error ratio and a latency ratio as Prometheus recording rules.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-02/labs/lab-01
     astrona submit -c .
     ```
 

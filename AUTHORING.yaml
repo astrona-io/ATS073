@@ -40,6 +40,20 @@ sections:
     sources:
     - reading: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
       adapted_from: null
+  - id: module-02
+    title: "Traces In Depth: Spans, Context And Sampling Decisions"
+    objectives:
+    - Explain span context, parent-child structure and propagation.
+    - Choose span kind, status, events and links.
+    - Compare head sampling and tail sampling and configure tail sampling in a Collector.
+    - State what a set of sampled traces can and cannot prove.
+    outline:
+    - "Traces In Depth: Spans, Context And Sampling Decisions"
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-010/module-02/course.md
+      adapted_from: null
 - id: section-020
   title: Semantic Conventions
   curriculum_item: Semantic Conventions
@@ -59,6 +73,20 @@ sections:
     sources:
     - reading: sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
       adapted_from: null
+  - id: module-02
+    title: Semantic Conventions By Signal And Domain
+    objectives:
+    - Apply the naming rules, namespaces and requirement levels.
+    - Use the HTTP, RPC, database and messaging conventions.
+    - Place Kubernetes and cloud attributes on the resource and keep custom attributes in a team namespace.
+    - Rename and sanitize attributes with the transform processor.
+    outline:
+    - Semantic Conventions By Signal And Domain
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-02/course.md
+      adapted_from: null
 - id: section-030
   title: Instrumentation
   curriculum_item: Instrumentation
@@ -77,6 +105,20 @@ sections:
     module_lab: true
     sources:
     - reading: sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
+      adapted_from: null
+  - id: module-02
+    title: Manual Instrumentation With The API
+    objectives:
+    - Get a tracer and a meter and explain the instrumentation scope.
+    - Create spans with attributes and kind.
+    - Record events and exceptions and set the span status.
+    - Choose and create metric instruments in code.
+    outline:
+    - Manual Instrumentation With The API
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-02/course.md
       adapted_from: null
 - id: section-040
   title: Analysis and Outcomes
@@ -105,3 +147,17 @@ sections:
       adapted_from: ATS047/sections/section-060/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
     - reading: sections/section-040/module-01/course-02-dashboards-that-explain-population-units-and-gaps.md
       adapted_from: ATS051/sections/section-010/module-01/course-01-dashboards-that-explain-population-units-and-gaps.md
+  - id: module-02
+    title: RED, USE And The Four Golden Signals
+    objectives:
+    - Describe the RED method and the USE method.
+    - Name the four golden signals and choose the method that fits a component.
+    - Write PromQL for rate, errors, latency and utilization.
+    - Save a query as a recording rule and load it into Prometheus.
+    outline:
+    - RED, USE And The Four Golden Signals
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-02/course.md
+      adapted_from: null

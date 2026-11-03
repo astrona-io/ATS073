@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: scout-load
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: scout-load
+  template:
+    metadata:
+      labels:
+        app: scout-load
+    spec:
+      containers:
+        - name: traces
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'traces'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '2'
+            - '--service'
+            - 'scout'
+            - '--telemetry-attributes'
+            - 'http.method="GET"'
+            - '--telemetry-attributes'
+            - 'http.status_code=200'
+            - '--telemetry-attributes'
+            - 'user.email="ensign@example.com"'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: harbor-db-load
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: harbor-db-load
+  template:
+    metadata:
+      labels:
+        app: harbor-db-load
+    spec:
+      containers:
+        - name: traces
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'traces'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '2'
+            - '--service'
+            - 'harbor'
+            - '--telemetry-attributes'
+            - 'db.system="postgresql"'
+            - '--telemetry-attributes'
+            - 'db.name="orders"'
+            - '--telemetry-attributes'
+            - 'db.statement="SELECT * FROM orders WHERE id = 42"'

@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Record RED Signals As Prometheus Rules (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-040-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - prom/prometheus:v3.15.1
+      - nginx:1.31.8-alpine
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create Prometheus and the static metrics servers"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the recording rules have produced values
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: environment-intact
+      description: "Prometheus is available and reports up for the jobs bridge and shuttle"
+      type: file
+      source: validation/validate-environment-intact.sh
+      hint: "Do not change the Prometheus Deployment or the metrics servers. Change only the ConfigMap prometheus-config."
+    - name: sources-unchanged
+      description: "The fixed metric files and the scrape jobs are unchanged"
+      type: file
+      source: validation/validate-sources-unchanged.sh
+      hint: "Keep both scrape jobs in prometheus.yml and do not edit the metric ConfigMaps."
+    - name: rules-loaded
+      description: "Prometheus has loaded the three recording rules"
+      type: file
+      source: validation/validate-rules-loaded.sh
+      hint: "List /etc/prometheus/rules.yml under rule_files, put the rules in the key rules.yml, and restart the Deployment prometheus."
+    - name: request-total-correct
+      description: "bridge:http_requests:total equals the sum of all bridge requests"
+      type: file
+      source: validation/validate-request-total-correct.sh
+      hint: "expr: sum(http_requests_total{service=\"bridge\"})"
+    - name: error-ratio-correct
+      description: "bridge:http_error_ratio:ratio is the 5xx requests divided by all requests"
+      type: file
+      source: validation/validate-error-ratio-correct.sh
+      hint: "Divide the sum of the series with code=~\"5..\" by the sum of all bridge series."
+    - name: latency-ratio-correct
+      description: "The shuttle ratio is the requests within 0.3 seconds divided by all requests"
+      type: file
+      source: validation/validate-latency-ratio-correct.sh
+      hint: "Divide the sum of the bucket le=\"0.3\" by the sum of the series _count."
+
+teardown:
+  keepCluster: false

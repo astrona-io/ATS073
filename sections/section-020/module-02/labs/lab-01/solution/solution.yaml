@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: otel-collector-config
+  namespace: observability
+data:
+  collector.yaml: |
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+            endpoint: 0.0.0.0:4317
+          http:
+            endpoint: 0.0.0.0:4318
+    processors:
+      transform:
+        error_mode: ignore
+        trace_statements:
+          - context: span
+            statements:
+              - set(attributes["db.system.name"], attributes["db.system"])
+              - set(attributes["db.namespace"], attributes["db.name"])
+              - set(attributes["db.query.text"], attributes["db.statement"])
+              - replace_pattern(attributes["db.query.text"], "= [0-9]+", "= ?")
+              - delete_key(attributes, "db.system")
+              - delete_key(attributes, "db.name")
+              - delete_key(attributes, "db.statement")
+    exporters:
+      debug:
+        verbosity: detailed
+    service:
+      pipelines:
+        traces:
+          receivers: [otlp]
+          processors: [transform]
+          exporters: [debug]
