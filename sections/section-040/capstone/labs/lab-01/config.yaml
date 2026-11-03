@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Analysis And Outcomes Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-capstone-040
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - prom/prometheus:v3.15.1
+      - nginx:1.31.8-alpine
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create Prometheus with one working, one broken and one empty scrape job"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: prometheus-intact
+      description: "Prometheus is available with its image and still scrapes bridge"
+      type: file
+      source: validation/validate-prometheus-intact.sh
+      hint: "Change only the ConfigMap prometheus-config and restart the Deployment."
+    - name: scout-scraped
+      description: "Prometheus reports up == 1 for the job scout"
+      type: file
+      source: validation/validate-scout-scraped.sh
+      hint: "The job scout targets the wrong port. The Service scout-metrics listens on 8080. Restart Prometheus after you change the ConfigMap."
+    - name: probe-job-kept
+      description: "The job probe is still configured and has no series"
+      type: file
+      source: validation/validate-probe-job-kept.sh
+      hint: "Do not delete the probe job or invent data for it. A target that is down reports up 0 and has no request series."
+    - name: latency-sli-correct
+      description: "requests_total, under_300ms and latency_sli match the histogram"
+      type: file
+      source: validation/validate-latency-sli-correct.sh
+      hint: "Read http_request_duration_seconds_count and the bucket with le=0.3 of the job scout. latency_sli = under_300ms / requests_total * 100."
+    - name: verdict-and-gap-recorded
+      description: "slo_target is 95, slo_met is correct and probe_status is no-data"
+      type: file
+      source: validation/validate-verdict-and-gap-recorded.sh
+      hint: "The SLO is met when latency_sli is at least 95. probe_status must say no-data, not 0."
+
+teardown:
+  keepCluster: false

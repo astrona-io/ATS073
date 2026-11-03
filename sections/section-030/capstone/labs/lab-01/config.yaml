@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Instrumentation Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-capstone-030
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - python:3.13-slim
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector and three instrumented programs with one mistake each"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not change the Collector."
+    - name: programs-unchanged
+      description: "The three Deployments keep their image and code"
+      type: file
+      source: validation/validate-programs-unchanged.sh
+      hint: "Change environment variables only."
+    - name: scout-api-delivers
+      description: "scout-api sends spans under its own service name"
+      type: file
+      source: validation/validate-scout-api-delivers.sh
+      hint: "The endpoint port does not match the protocol, and the service name is missing."
+    - name: scout-worker-delivers
+      description: "scout-worker sends spans"
+      type: file
+      source: validation/validate-scout-worker-delivers.sh
+      hint: "One variable switches the whole SDK off. Remove it or set it to false."
+    - name: probe-batch-delivers
+      description: "probe-batch sends spans"
+      type: file
+      source: validation/validate-probe-batch-delivers.sh
+      hint: "One variable decides which traces are recorded. Pick a sampler that records every trace."
+    - name: environment-set
+      description: "All three services carry deployment.environment.name=production on the resource"
+      type: file
+      source: validation/validate-environment-set.sh
+      hint: "Set OTEL_RESOURCE_ATTRIBUTES on each Deployment."
+    - name: review-recorded
+      description: "The ConfigMap instrumentation-review names the cause for each program"
+      type: file
+      source: validation/validate-review-recorded.sh
+      hint: "Create the ConfigMap in starfleet with one key per Deployment and the values wrong-endpoint-port, sdk-disabled and sampler-always-off."
+
+teardown:
+  keepCluster: false

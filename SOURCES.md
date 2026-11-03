@@ -1,6 +1,6 @@
 # Primary Authoring Sources
 
-[Official OTCA objectives](https://training.linuxfoundation.org/certification/opentelemetry-certified-associate-otca/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation paths are recorded per reading in AUTHORING.yaml. No runtime or command-output validation is claimed.
+[Official OTCA objectives](https://training.linuxfoundation.org/certification/opentelemetry-certified-associate-otca/) checked on 2026-10-11. The examination is multiple-choice. These primary references support author review; learner pages are self-contained. Adaptation paths are recorded per reading in AUTHORING.yaml. The labs and playgrounds also use these tools, checked statically only: the OpenTelemetry Collector contrib distribution with the `debug` exporter, the `resource`, `attributes` and `probabilistic_sampler` processors, `telemetrygen`, the Python `opentelemetry-instrument` launcher and Prometheus with its HTTP query API. No runtime or command-output validation is claimed.
 
 - [Signals](https://opentelemetry.io/docs/concepts/signals/)
 - [Instrumentation](https://opentelemetry.io/docs/concepts/instrumentation/)
@@ -28,4 +28,12 @@
 - [Trace Context standard](https://www.w3.org/TR/trace-context/)
 - [Service-level objectives](https://sre.google/sre-book/service-level-objectives/)
 
-Version-specific fields and options need confirmation against the intended deployed release before adding executable material. Configuration excerpts illustrate intent and do not claim installation or runtime results. Question banks are independently authored practice, not official examination items.
+- [Collector debug exporter](https://github.com/open-telemetry/opentelemetry-collector/tree/main/exporter/debugexporter)
+- [Attributes processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor)
+- [Probabilistic sampler processor](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/probabilisticsamplerprocessor)
+- [telemetrygen](https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/cmd/telemetrygen)
+- [Python zero-code instrumentation](https://opentelemetry.io/docs/zero-code/python/)
+- [Prometheus HTTP API](https://prometheus.io/docs/prometheus/latest/querying/api/)
+- [Prometheus histograms and summaries](https://prometheus.io/docs/practices/histograms/)
+
+Version-specific fields and options need confirmation against the intended deployed release before changing a lab. Labs and playgrounds are untested, and no runtime results are claimed. Question banks are independently authored practice, not official examination items.

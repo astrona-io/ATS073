@@ -1,9 +1,9 @@
-# Reading-only content; YAML knowledge checks have a separate index.
+# Course manifest for ATS073. Each section lists its README, the module (landing, parts, lab Question reading and lab entry after the part tested, summary), a capstone and a quiz. A final domain quiz closes the course.
 training:
   id: ATS073
   title: 'OTCA: Fundamentals of Observability'
-  description: 'Detailed reading material and reusable YAML knowledge checks for OTCA: Fundamentals of
-    Observability. Technical content remains draft. No labs or playgrounds.'
+  description: Concept lessons, diagrams, playgrounds, graded labs, capstones and original scenario quizzes
+    covering every published objective in this OTCA domain. Labs run on kind (Kubernetes 1.35) with the OpenTelemetry Collector and Prometheus.
   certification:
     name: OpenTelemetry Certified Associate
     code: OTCA
@@ -16,90 +16,310 @@ training:
     - Instrumentation
     - Analysis and Outcomes
 modules:
-- id: module-intro
-  title: Introduction
-  description: Audience, reading method and review process.
-  content:
-  - type: reading
+  - id: module-intro
     title: Introduction
-    path: sections/intro/README.md
-  - type: reading
-    title: Welcome To The Course
-    path: sections/intro/course-01-welcome.md
-  - type: reading
-    title: Get Your Machine Ready
-    path: sections/intro/course-02-get-your-machine-ready.md
-  - type: reading
-    title: How This Course Is Made
-    path: sections/intro/course-03-how-this-course-is-made.md
-- id: module-010
-  title: Telemetry Data
-  description: Developed reading and reasoning for Telemetry Data.
-  maturity: alpha
-  content:
-  - type: reading
-    title: Telemetry Data
-    path: sections/section-010/README.md
-  - type: reading
-    title: Telemetry Signals, Resource Identity And Evidence Limits
-    path: sections/section-010/module-01/course.md
-  - type: reading
-    title: Telemetry Signals, Resource Identity And Evidence Limits
-    path: sections/section-010/module-01/course-01-telemetry-signals-resource-identity-and-evidence-limits.md
-  - type: reading
-    title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
-- id: module-020
-  title: Semantic Conventions
-  description: Developed reading and reasoning for Semantic Conventions.
-  maturity: alpha
-  content:
-  - type: reading
-    title: Semantic Conventions
-    path: sections/section-020/README.md
-  - type: reading
-    title: Semantic Conventions, Attribute Meaning And Stability
-    path: sections/section-020/module-01/course.md
-  - type: reading
-    title: Semantic Conventions, Attribute Meaning And Stability
-    path: sections/section-020/module-01/course-01-semantic-conventions-attribute-meaning-and-stability.md
-  - type: reading
-    title: Summary
-    path: sections/section-020/module-01/course-02-summary.md
-- id: module-030
-  title: Instrumentation
-  description: Developed reading and reasoning for Instrumentation.
-  maturity: alpha
-  content:
-  - type: reading
-    title: Instrumentation
-    path: sections/section-030/README.md
-  - type: reading
-    title: API Calls, Automatic Instrumentation And Measurement Design
-    path: sections/section-030/module-01/course.md
-  - type: reading
-    title: API Calls, Automatic Instrumentation And Measurement Design
-    path: sections/section-030/module-01/course-01-api-calls-automatic-instrumentation-and-measurement-design.md
-  - type: reading
-    title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
-- id: module-040
-  title: Analysis and Outcomes
-  description: Developed reading and reasoning for Analysis and Outcomes.
-  maturity: alpha
-  content:
-  - type: reading
-    title: Analysis and Outcomes
-    path: sections/section-040/README.md
-  - type: reading
-    title: Service Indicators, Objectives, Agreements And Budgets
-    path: sections/section-040/module-01/course.md
-  - type: reading
-    title: Service Indicators, Objectives, Agreements And Budgets
-    path: sections/section-040/module-01/course-01-service-indicators-objectives-agreements-and-budgets.md
-  - type: reading
-    title: Dashboards That Explain Population, Units And Gaps
-    path: sections/section-040/module-01/course-02-dashboards-that-explain-population-units-and-gaps.md
-  - type: reading
-    title: Summary
-    path: sections/section-040/module-01/course-03-summary.md
+    description: Audience, learning approach, tools to install and contribution process.
+    content:
+    - type: reading
+      title: "Introduction"
+      path: sections/intro/README.md
+    - type: reading
+      title: "Welcome To The Course"
+      path: sections/intro/course-01-welcome.md
+    - type: reading
+      title: "Get Your Machine Ready"
+      path: sections/intro/course-02-get-your-machine-ready.md
+    - type: reading
+      title: "How This Course Is Made"
+      path: sections/intro/course-03-how-this-course-is-made.md
+
+  - id: module-010
+    title: "Telemetry Data"
+    description: >
+      Makes the reader able to say what metrics, traces and logs record, how resource identity and scope tell where telemetry came from, and what the data cannot prove, and to change the pipelines and resource attributes of an OpenTelemetry Collector in a running cluster.
+
+    content:
+      - type: reading
+        title: "Section Overview"
+        path: sections/section-010/README.md
+
+      - type: reading
+        title: "Telemetry Signals, Resource Identity And Evidence Limits"
+        path: sections/section-010/module-01/course.md
+      - type: reading
+        title: "Metrics, Traces And Logs: What Each Signal Records"
+        path: sections/section-010/module-01/course-01-metrics-traces-and-logs.md
+      - type: reading
+        title: "Resource Identity, Scope And Correlation"
+        path: sections/section-010/module-01/course-02-resource-identity-scope-and-correlation.md
+      - type: reading
+        title: "Collector Pipelines, Sampling And Evidence Limits"
+        path: sections/section-010/module-01/course-03-collector-pipelines-sampling-and-evidence-limits.md
+      - type: reading
+        title: "Question"
+        path: sections/section-010/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Collector Pipelines And Resource Attributes Lab"
+        path: sections/section-010/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, collector, pipelines, resource-processor, debug-exporter]
+        learning_goals:
+          - "Add metrics and logs pipelines to a Collector that only processes traces"
+          - "Set resource attributes with the resource processor in all three pipelines"
+          - "Read the debug exporter output of the restarted Collector to confirm the result"
+        resources:
+          - name: "OpenTelemetry Collector configuration"
+            url: https://opentelemetry.io/docs/collector/configuration/
+          - name: "OpenTelemetry signals"
+            url: https://opentelemetry.io/docs/concepts/signals/
+      - type: reading
+        title: "Summary"
+        path: sections/section-010/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Question"
+        path: sections/section-010/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Telemetry Data Capstone"
+        path: sections/section-010/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, collector, sampling, resource-processor, evidence]
+        learning_goals:
+          - "Add the missing metrics pipeline and set resource attributes in every pipeline"
+          - "Sample traces with the probabilistic sampler without touching metrics or logs"
+          - "Record the findings in a ConfigMap"
+        resources:
+          - name: "Collector processors"
+            url: https://opentelemetry.io/docs/collector/configuration/#processors
+          - name: "Probabilistic sampler processor"
+            url: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/probabilisticsamplerprocessor
+      - type: quiz
+        title: "Knowledge Check: Telemetry Data"
+        path: sections/section-010/quiz.yaml
+        pass_score: 70
+
+  - id: module-020
+    title: "Semantic Conventions"
+    description: >
+      Makes the reader able to explain a semantic convention as a shared contract, place each attribute on the resource or on the operation, and rename, copy and remove attributes in a Collector without breaking dashboards or leaking personal data.
+
+    content:
+      - type: reading
+        title: "Section Overview"
+        path: sections/section-020/README.md
+
+      - type: reading
+        title: "Semantic Conventions, Attribute Meaning And Stability"
+        path: sections/section-020/module-01/course.md
+      - type: reading
+        title: "Semantic Conventions As A Shared Contract"
+        path: sections/section-020/module-01/course-01-semantic-conventions-as-a-shared-contract.md
+      - type: reading
+        title: "Resource Attributes And Operation Attributes"
+        path: sections/section-020/module-01/course-02-resource-attributes-and-operation-attributes.md
+      - type: reading
+        title: "Normalizing Attributes In The Collector"
+        path: sections/section-020/module-01/course-03-normalizing-attributes-in-the-collector.md
+      - type: reading
+        title: "Question"
+        path: sections/section-020/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Normalize Span Attributes Lab"
+        path: sections/section-020/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 20m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, semantic-conventions, attributes-processor, collector, privacy]
+        learning_goals:
+          - "Copy old attribute names to the current convention names and keep the value types"
+          - "Remove the old names and a personal attribute with the attributes processor"
+          - "Check the result in the debug exporter output"
+        resources:
+          - name: "OpenTelemetry semantic conventions"
+            url: https://opentelemetry.io/docs/specs/semconv/
+          - name: "Attributes processor"
+            url: https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor
+      - type: reading
+        title: "Summary"
+        path: sections/section-020/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Question"
+        path: sections/section-020/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Semantic Conventions Capstone"
+        path: sections/section-020/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 35m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, semantic-conventions, cardinality, privacy, resource-processor]
+        learning_goals:
+          - "Rename old attribute names on spans while keeping the integer status code"
+          - "Remove personal and unbounded attributes from spans, logs and metrics"
+          - "Record the review in a ConfigMap"
+        resources:
+          - name: "HTTP semantic conventions"
+            url: https://opentelemetry.io/docs/specs/semconv/http/
+          - name: "Resource semantic conventions"
+            url: https://opentelemetry.io/docs/specs/semconv/resource/
+      - type: quiz
+        title: "Knowledge Check: Semantic Conventions"
+        path: sections/section-020/quiz.yaml
+        pass_score: 70
+
+  - id: module-030
+    title: "Instrumentation"
+    description: >
+      Makes the reader able to explain what the API, the SDK and an exporter each do, configure an instrumented program with OTEL environment variables, and choose measurements that are useful, small and safe.
+
+    content:
+      - type: reading
+        title: "Section Overview"
+        path: sections/section-030/README.md
+
+      - type: reading
+        title: "API Calls, Automatic Instrumentation And Measurement Design"
+        path: sections/section-030/module-01/course.md
+      - type: reading
+        title: "API, SDK And Exporter: Who Does What"
+        path: sections/section-030/module-01/course-01-api-sdk-and-exporter-who-does-what.md
+      - type: reading
+        title: "Automatic Instrumentation And Environment Variables"
+        path: sections/section-030/module-01/course-02-automatic-instrumentation-and-environment-variables.md
+      - type: reading
+        title: "Designing Useful Measurements"
+        path: sections/section-030/module-01/course-03-designing-useful-measurements.md
+      - type: reading
+        title: "Question"
+        path: sections/section-030/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Configure An Instrumented Program Lab"
+        path: sections/section-030/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, python, otel-environment-variables, otlp, service-name]
+        learning_goals:
+          - "Match the OTLP endpoint to the exporter protocol"
+          - "Set the service name and resource attributes with environment variables"
+          - "Confirm spans and a counter in the Collector output"
+        resources:
+          - name: "Python zero-code instrumentation"
+            url: https://opentelemetry.io/docs/zero-code/python/
+          - name: "SDK environment variables"
+            url: https://opentelemetry.io/docs/specs/otel/configuration/sdk-environment-variables/
+      - type: reading
+        title: "Summary"
+        path: sections/section-030/module-01/course-04-summary.md
+
+      - type: reading
+        title: "Question"
+        path: sections/section-030/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Instrumentation Capstone"
+        path: sections/section-030/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 40m
+        topic: observability
+        task_kind: fix
+        tags: [opentelemetry, python, sampler, sdk-disabled, otlp, troubleshooting]
+        learning_goals:
+          - "Find three different causes of missing telemetry in the environments of three Deployments"
+          - "Fix each cause without editing code, images or the Collector"
+          - "Record the cause for each program in a ConfigMap"
+        resources:
+          - name: "OpenTelemetry sampling"
+            url: https://opentelemetry.io/docs/concepts/sampling/
+          - name: "OTLP exporter configuration"
+            url: https://opentelemetry.io/docs/specs/otel/protocol/exporter/
+      - type: quiz
+        title: "Knowledge Check: Instrumentation"
+        path: sections/section-030/quiz.yaml
+        pass_score: 70
+
+  - id: module-040
+    title: "Analysis and Outcomes"
+    description: >
+      Makes the reader able to turn telemetry into a decision: define an SLI and an SLO, calculate an error budget and a burn rate, build a latency indicator from a histogram, check scrape health, and read a dashboard without mistaking a missing series for a measured zero.
+
+    content:
+      - type: reading
+        title: "Section Overview"
+        path: sections/section-040/README.md
+
+      - type: reading
+        title: "Service Indicators, Objectives, Agreements And Budgets"
+        path: sections/section-040/module-01/course.md
+      - type: reading
+        title: "SLIs, SLOs And SLAs: Defining Good And Valid Events"
+        path: sections/section-040/module-01/course-01-slis-slos-and-slas.md
+      - type: reading
+        title: "Error Budgets And Burn Rate"
+        path: sections/section-040/module-01/course-02-error-budgets-and-burn-rate.md
+      - type: reading
+        title: "Question"
+        path: sections/section-040/module-01/labs/lab-01/question.md
+      - type: lab
+        title: "Availability SLI And Error Budget Lab"
+        path: sections/section-040/module-01/labs/lab-01
+        difficulty: intermediate
+        estimated_duration: 25m
+        topic: observability
+        task_kind: build
+        tags: [prometheus, promql, sli, slo, error-budget]
+        learning_goals:
+          - "Query Prometheus for good and valid events with the stated definition"
+          - "Calculate the SLI, the allowed bad events and the budget consumed"
+          - "Record the report in a ConfigMap"
+        resources:
+          - name: "Service level objectives"
+            url: https://sre.google/sre-book/service-level-objectives/
+          - name: "Prometheus querying"
+            url: https://prometheus.io/docs/prometheus/latest/querying/basics/
+      - type: reading
+        title: "Latency Indicators And Scrape Health"
+        path: sections/section-040/module-01/course-03-latency-indicators-and-scrape-health.md
+      - type: reading
+        title: "Dashboards That Explain Population, Units And Gaps"
+        path: sections/section-040/module-01/course-04-dashboards-population-units-and-gaps.md
+      - type: reading
+        title: "Summary"
+        path: sections/section-040/module-01/course-05-summary.md
+
+      - type: reading
+        title: "Question"
+        path: sections/section-040/capstone/labs/lab-01/question.md
+      - type: lab
+        title: "Analysis and Outcomes Capstone"
+        path: sections/section-040/capstone/labs/lab-01
+        difficulty: advanced
+        estimated_duration: 40m
+        topic: observability
+        task_kind: fix
+        tags: [prometheus, promql, histogram, scrape-health, latency-sli]
+        learning_goals:
+          - "Fix a scrape job that targets the wrong port and confirm up is 1"
+          - "Compute a latency SLI from the cumulative buckets of a histogram"
+          - "Report a job with no data as no-data and not as zero"
+        resources:
+          - name: "Prometheus histograms and summaries"
+            url: https://prometheus.io/docs/practices/histograms/
+          - name: "Prometheus configuration"
+            url: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+      - type: quiz
+        title: "Knowledge Check: Analysis and Outcomes"
+        path: sections/section-040/quiz.yaml
+        pass_score: 70
+      - type: quiz
+        title: "Final Knowledge Check: Fundamentals of Observability"
+        path: sections/final-domain-quiz.yaml
+        pass_score: 70

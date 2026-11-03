@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: instrumentation-review
+  namespace: starfleet
+data:
+  scout-api: "wrong-endpoint-port"
+  scout-worker: "sdk-disabled"
+  probe-batch: "sampler-always-off"

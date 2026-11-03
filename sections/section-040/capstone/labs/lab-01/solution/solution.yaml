@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: observability
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s
+    scrape_configs:
+      - job_name: bridge
+        static_configs:
+          - targets: ['bridge-metrics.observability:8080']
+      - job_name: scout
+        static_configs:
+          - targets: ['scout-metrics.observability:8080']
+      - job_name: probe
+        static_configs:
+          - targets: ['probe-metrics.observability:8080']
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: latency-report
+  namespace: starfleet
+data:
+  requests_total: "48000"
+  under_300ms: "45360"
+  latency_sli: "94.50"
+  slo_target: "95"
+  slo_met: "no"
+  probe_status: "no-data"

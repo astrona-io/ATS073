@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slo-report
+  namespace: starfleet
+data:
+  valid_events: "96500"
+  good_events: "96000"
+  sli: "99.48"
+  slo_target: "99.5"
+  slo_met: "no"
+  allowed_bad_events: "482.5"
+  budget_consumed_percent: "103.63"
+  budget_remaining_events: "-17.5"

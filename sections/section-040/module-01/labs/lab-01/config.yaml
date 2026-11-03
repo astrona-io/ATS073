@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Calculate An SLI And An Error Budget (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-040-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - prom/prometheus:v3.15.1
+      - nginx:1.31.8-alpine
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create Prometheus and the static metrics server"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: environment-intact
+      description: "Prometheus is available and reports up for the job bridge"
+      type: file
+      source: validation/validate-environment-intact.sh
+      hint: "Do not change Prometheus or the metrics server. Only record the report."
+    - name: populations-correct
+      description: "valid_events and good_events match the defined populations"
+      type: file
+      source: validation/validate-populations-correct.sh
+      hint: "Valid events are all /orders requests except those with a 4xx code. Good events have a 2xx or 3xx code. 5xx requests are valid and not good."
+    - name: sli-correct
+      description: "sli is the good fraction in percent with two decimals"
+      type: file
+      source: validation/validate-sli-correct.sh
+      hint: "sli = good_events / valid_events * 100, rounded to two decimals. Write only the number."
+    - name: budget-correct
+      description: "The allowed bad events, the consumed percentage and the remaining events are correct"
+      type: file
+      source: validation/validate-budget-correct.sh
+      hint: "allowed = valid_events * (100 - slo_target) / 100. Consumed = bad events / allowed * 100. Remaining = allowed - bad events."
+    - name: verdict-correct
+      description: "slo_target is 99.5 and slo_met states the verdict"
+      type: file
+      source: validation/validate-verdict-correct.sh
+      hint: "The SLO is met when the SLI is at least the target. Write yes or no."
+
+teardown:
+  keepCluster: false

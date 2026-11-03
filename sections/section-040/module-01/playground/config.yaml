@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Indicators, Objectives And Dashboards (PLAYGROUND). A clean sandbox with Prometheus and a fixed set of request counters. No task, no grading, no `astrona submit`. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-playground-040-01
+  docs:
+    guide: docs/overview.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - prom/prometheus:v3.15.1
+      - nginx:1.31.8-alpine
+
+bootstrap:
+  manifests:
+    - name: observability
+      type: file
+      source: manifests/observability.yaml
+  waitFor:
+    - resource: deploy/prometheus
+      namespace: observability
+    - resource: deploy/bridge-metrics
+      namespace: observability
+    - resource: deploy/shuttle-metrics
+      namespace: observability
+
+teardown:
+  keepCluster: false

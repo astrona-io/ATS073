@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Add Pipelines And Resource Identity (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-010-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector with a traces pipeline only and the load generator"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not delete or replace the Deployment. Change only the ConfigMap, then restart the Deployment."
+    - name: pipelines-configured
+      description: "Traces, metrics and logs pipelines exist and each uses the resource processor"
+      type: file
+      source: validation/validate-pipelines-configured.sh
+      hint: "Add a metrics and a logs pipeline. Add a resource processor, and list it in the processors of all three pipelines. Write the lists in flow style, for example processors: [resource]."
+    - name: signals-flowing
+      description: "The Collector log shows traces, metrics and logs from the running Collector pod"
+      type: file
+      source: validation/validate-signals-flowing.sh
+      hint: "Restart the Collector after you change the ConfigMap. Wait 30 seconds and read the log again."
+    - name: resource-identity-present
+      description: "Every signal carries deployment.environment.name=production and service.namespace=starfleet, and service.name stays bridge"
+      type: file
+      source: validation/validate-resource-identity-present.sh
+      hint: "Use the resource processor with action upsert. Do not change the telemetrygen arguments."
+    - name: generator-unchanged
+      description: "The bridge-load Deployment still has its three containers and its original image"
+      type: file
+      source: validation/validate-generator-unchanged.sh
+      hint: "Fix the Collector. Do not edit bridge-load."
+
+teardown:
+  keepCluster: false

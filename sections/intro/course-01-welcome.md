@@ -1,9 +1,9 @@
 # Welcome To The Course
 
-This course develops the official Fundamentals of Observability objectives for OpenTelemetry Certified Associate (OTCA). The certification uses a multiple-choice examination. The course is independently authored reading material and does not claim to simulate the examination.
+This course is for learners preparing for the OpenTelemetry Certified Associate (OTCA) examination. It covers Fundamentals of Observability, worth 18% of the published curriculum. The examination tests knowledge through multiple-choice questions. The explanations in this course build the reasoning needed to choose an answer, and the hands-on labs let you see each idea work on a real cluster.
 
-Each section starts with its own introduction and learning outcomes. Each module provides goals, developed teaching and a final summary. Lesson counts follow the subject rather than a fixed number.
+At the end, you can explain and compare the concepts in Telemetry Data, Semantic Conventions, Instrumentation, and Analysis and Outcomes. You can also run the matching tools: an OpenTelemetry Collector, the `telemetrygen` load generator, an instrumented Python program and Prometheus. You can read what they report. Technical terms and acronyms are defined when they appear. Examples use a small set of example workloads named `bridge`, `scout`, `shuttle` and `probe`. The names identify workloads only and do not change the technical meaning.
 
-YAML knowledge checks are registered separately for future presentation. They follow the relevant summaries and include original questions and answer feedback. Technical pages remain draft for review.
+Each section begins with an introduction and learning outcomes. Each module starts with a short map, continues with teaching parts, and ends with a summary. Every module has a playground, which is a clean Kubernetes cluster you can explore without any task, and a graded lab, which gives you a task and checks the result on the live cluster. Each section ends with a capstone lab and a knowledge check. A final knowledge check closes the course.
 
-Read the explanations and worked examples to identify the responsible component, intended operation and limits of each claim. No live environment or executed results are required.
+Read the examples carefully, identify which component does the work, and predict what changes when a condition changes. The practice questions are original and are not copied from the examination.

@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bridge-load
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bridge-load
+  template:
+    metadata:
+      labels:
+        app: bridge-load
+    spec:
+      containers:
+        - name: traces
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'traces'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '2'
+            - '--service'
+            - 'bridge'
+            - '--telemetry-attributes'
+            - 'http.request.method="GET"'
+        - name: metrics
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'metrics'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '1'
+            - '--service'
+            - 'bridge'
+        - name: logs
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'logs'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '2'
+            - '--service'
+            - 'bridge'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: probe-load
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: probe-load
+  template:
+    metadata:
+      labels:
+        app: probe-load
+    spec:
+      containers:
+        - name: traces
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'traces'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '1'
+            - '--service'
+            - 'probe'

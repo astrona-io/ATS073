@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Configure The SDK With Environment Variables (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-030-01
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - python:3.13-slim
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector and the instrumented program with wrong exporter settings"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not change the Collector. Fix the environment of shuttle-orders."
+    - name: program-unchanged
+      description: "shuttle-orders keeps its image and the orders-app code"
+      type: file
+      source: validation/validate-program-unchanged.sh
+      hint: "Change environment variables only. Do not edit the program."
+    - name: spans-arrive-named
+      description: "Spans arrive with service.name shuttle-orders and the span name process-order"
+      type: file
+      source: validation/validate-spans-arrive-named.sh
+      hint: "Set OTEL_SERVICE_NAME and make the endpoint match the protocol. Port 4318 is OTLP over HTTP and port 4317 is gRPC."
+    - name: metrics-arrive
+      description: "The counter orders.processed arrives for shuttle-orders"
+      type: file
+      source: validation/validate-metrics-arrive.sh
+      hint: "Metrics use the same exporter settings as spans. The export interval is already 5000 milliseconds."
+    - name: resource-attributes-set
+      description: "The resource carries deployment.environment.name=production and service.version=1.4.0"
+      type: file
+      source: validation/validate-resource-attributes-set.sh
+      hint: "Set OTEL_RESOURCE_ATTRIBUTES to a comma separated list of key=value pairs."
+
+teardown:
+  keepCluster: false

@@ -1,0 +1,35 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Telemetry Signals And Resource Identity (PLAYGROUND). A clean sandbox with an OpenTelemetry Collector and two load generators. No task, no grading, no `astrona submit`. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-playground-010-01
+  docs:
+    guide: docs/overview.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  manifests:
+    - name: observability
+      type: file
+      source: manifests/observability.yaml
+    - name: starfleet
+      type: file
+      source: manifests/starfleet.yaml
+  waitFor:
+    - resource: deploy/otel-collector
+      namespace: observability
+    - resource: deploy/bridge-load
+      namespace: starfleet
+    - resource: deploy/probe-load
+      namespace: starfleet
+
+teardown:
+  keepCluster: false

@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Semantic Conventions Capstone (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-capstone-020
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector and three generators that need normalization"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the collector and the generators have produced new output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Change the ConfigMap and restart the Deployment. Do not replace it."
+    - name: traces-normalized
+      description: "Spans use the current HTTP names and carry no user.email"
+      type: file
+      source: validation/validate-traces-normalized.sh
+      hint: "Rename the two HTTP attributes and delete user.email in the traces pipeline."
+    - name: logs-clean
+      description: "Log records carry no user.email"
+      type: file
+      source: validation/validate-logs-clean.sh
+      hint: "Log records have attributes too. Add a processor to the logs pipeline."
+    - name: metrics-bounded
+      description: "Metric data points carry no customer.id"
+      type: file
+      source: validation/validate-metrics-bounded.sh
+      hint: "A customer identifier is an unbounded dimension for a metric. Delete it in the metrics pipeline."
+    - name: environment-on-resource
+      description: "Every signal carries deployment.environment.name=production on the resource and keeps its service.name"
+      type: file
+      source: validation/validate-environment-on-resource.sh
+      hint: "Use the resource processor, not the attributes processor, for a resource attribute."
+    - name: review-recorded
+      description: "The ConfigMap semconv-review records what you renamed, removed and which key is a resource attribute"
+      type: file
+      source: validation/validate-review-recorded.sh
+      hint: "Create the ConfigMap in starfleet with the keys renamed, removed and resource-attribute."
+    - name: generators-unchanged
+      description: "The three generators are unchanged"
+      type: file
+      source: validation/validate-generators-unchanged.sh
+      hint: "Do not edit the generators."
+
+teardown:
+  keepCluster: false
