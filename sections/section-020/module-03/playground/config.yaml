@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Resource Detection, Schema URLs And Stability (PLAYGROUND). A clean sandbox with an OpenTelemetry Collector that has an environment variable for the environment name and a trace generator. No task, no grading, no `astrona submit`. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-playground-020-03
+  docs:
+    guide: docs/overview.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  manifests:
+    - name: observability
+      type: file
+      source: manifests/observability.yaml
+    - name: starfleet
+      type: file
+      source: manifests/starfleet.yaml
+  waitFor:
+    - resource: deploy/otel-collector
+      namespace: observability
+    - resource: deploy/shuttle-load
+      namespace: starfleet
+
+teardown:
+  keepCluster: false

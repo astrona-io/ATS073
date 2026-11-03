@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Write Burn-Rate Alerts For The Bridge (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-040-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - prom/prometheus:v3.15.1
+      - nginx:1.31.8-alpine
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create Prometheus and the two metric sources without any rule file"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the reference solution has produced the expected output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: prometheus-intact
+      description: "Prometheus is intact and scrapes bridge and shuttle"
+      type: file
+      source: validation/validate-prometheus-intact.sh
+      hint: "Do not change the Deployment or the scrape jobs."
+    - name: sources-unchanged
+      description: "The fixed metric files and the scrape jobs are unchanged"
+      type: file
+      source: validation/validate-sources-unchanged.sh
+      hint: "Do not edit the metric ConfigMaps or remove a scrape target."
+    - name: alert-rules-loaded
+      description: "Prometheus has loaded BridgeSlowBurn and BridgeFastBurn with severity labels and a summary"
+      type: file
+      source: validation/validate-alert-rules-loaded.sh
+      hint: "Add the rule file to rule_files, restart Prometheus, and give both alerts a severity label and a summary annotation."
+    - name: slow-burn-firing
+      description: "BridgeSlowBurn is firing"
+      type: file
+      source: validation/validate-slow-burn-firing.sh
+      hint: "The ratio is about 0.0045, above 3 * 0.001. Check the expression and wait for the for duration of 10 seconds."
+    - name: fast-burn-quiet
+      description: "BridgeFastBurn is not firing"
+      type: file
+      source: validation/validate-fast-burn-quiet.sh
+      hint: "The ratio 0.0045 is below 14.4 * 0.001, so the fast burn must stay inactive. Check the threshold."
+
+teardown:
+  keepCluster: false

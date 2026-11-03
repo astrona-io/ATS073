@@ -1,0 +1,123 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuttle-load
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuttle-load
+  template:
+    metadata:
+      labels:
+        app: shuttle-load
+    spec:
+      containers:
+        - name: logs-info
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'logs'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '5'
+            - '--service'
+            - 'shuttle'
+            - '--severity-text'
+            - 'Info'
+            - '--severity-number'
+            - '9'
+            - '--body'
+            - 'order accepted'
+        - name: logs-debug
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'logs'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '5'
+            - '--service'
+            - 'shuttle'
+            - '--severity-text'
+            - 'Debug'
+            - '--severity-number'
+            - '5'
+            - '--body'
+            - 'stock lookup'
+        - name: logs-error
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'logs'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '1'
+            - '--service'
+            - 'shuttle'
+            - '--severity-text'
+            - 'Error'
+            - '--severity-number'
+            - '17'
+            - '--body'
+            - 'payment failed'
+        - name: metrics-sum
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'metrics'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '1'
+            - '--service'
+            - 'shuttle'
+            - '--metric-type'
+            - 'Sum'
+        - name: metrics-gauge
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'metrics'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '1'
+            - '--service'
+            - 'shuttle'
+            - '--metric-type'
+            - 'Gauge'
+            - '--otlp-metric-name'
+            - 'fuel.level'
+        - name: traces
+          image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+          args:
+            - 'traces'
+            - '--otlp-insecure'
+            - '--otlp-endpoint'
+            - 'otel-collector.observability:4317'
+            - '--duration'
+            - 'inf'
+            - '--rate'
+            - '2'
+            - '--service'
+            - 'shuttle'

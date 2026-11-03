@@ -23,6 +23,10 @@ This section teaches you how telemetry becomes a decision. You will define servi
 - Name the four golden signals and choose the method that fits a component.
 - Write PromQL for rate, errors, latency and utilization.
 - Save a query as a recording rule and load it into Prometheus.
+- Write an alerting rule with `for`, labels and annotations and describe the alert states.
+- Compute a burn rate and the share of budget used, and choose multiwindow thresholds.
+- Decide whether a symptom or a cause alert pages a person or opens a ticket.
+- Explain Alertmanager routing and find why an alert did not arrive.
 
 ---
 
@@ -49,6 +53,18 @@ This section teaches you how telemetry becomes a decision. You will define servi
 *   **Lab:** `sections/section-040/module-02/labs/lab-01` (UNTESTED). Record the request total, an error ratio and a latency ratio as Prometheus recording rules.
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-02/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 3. Alerting And Burn-Rate
+*   **Module Reader:** **Module 3: Alerting And Burn-Rate**
+*   **Hands-on Playground:** `sections/section-040/module-03/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-03/playground
+    ```
+*   **Lab:** `sections/section-040/module-03/labs/lab-01` (UNTESTED). Write burn-rate alerting rules in Prometheus and make one of them fire.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-040/module-03/labs/lab-01
     astrona submit -c .
     ```
 

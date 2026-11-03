@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Add Detected Resource Attributes In The Collector (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-020-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector without resource detection and the trace generator"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the reference solution has produced the expected output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not delete or replace the Deployment. Change the ConfigMap and the environment variable only."
+    - name: detection-configured
+      description: "The traces pipeline lists a resourcedetection processor with env, system and override false"
+      type: file
+      source: validation/validate-detection-configured.sh
+      hint: "Define resourcedetection with detectors: [env, system] and override: false and list it in the traces pipeline in flow style."
+    - name: environment-variable-set
+      description: "The Collector container has OTEL_RESOURCE_ATTRIBUTES with the environment name staging"
+      type: file
+      source: validation/validate-environment-variable-set.sh
+      hint: "Use kubectl set env on the Deployment otel-collector."
+    - name: attributes-detected
+      description: "The exported traces carry host.name, os.type and deployment.environment.name staging"
+      type: file
+      source: validation/validate-attributes-detected.sh
+      hint: "Wait for the new pod and read the log again. The variable must reach the Collector container."
+    - name: service-name-kept
+      description: "The traces keep the service name shuttle"
+      type: file
+      source: validation/validate-service-name-kept.sh
+      hint: "Use override: false so the detectors do not replace the value from the program."
+    - name: generator-unchanged
+      description: "The shuttle-load Deployment still has its original container and image"
+      type: file
+      source: validation/validate-generator-unchanged.sh
+      hint: "Fix the Collector. Do not edit shuttle-load."
+
+teardown:
+  keepCluster: false

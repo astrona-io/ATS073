@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Filter Debug Logs In The Collector (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-010-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.162.0
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector without a log filter and the log generators"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the reference solution has produced the expected output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not delete or replace the Deployment. Change only the ConfigMap, then restart the Deployment."
+    - name: filter-configured
+      description: "The logs pipeline lists a filter processor that tests the severity"
+      type: file
+      source: validation/validate-filter-configured.sh
+      hint: "Define a filter processor with a log_record condition on severity_number and list it in the logs pipeline in flow style."
+    - name: pipelines-intact
+      description: "The receiver, the exporter and the traces pipeline are intact"
+      type: file
+      source: validation/validate-pipelines-intact.sh
+      hint: "Keep the receiver, the exporter and the traces pipeline as they were."
+    - name: debug-logs-dropped
+      description: "The running Collector exports no Debug log records"
+      type: file
+      source: validation/validate-debug-logs-dropped.sh
+      hint: "Restart the Collector after you change the ConfigMap. Wait 60 seconds and read the log again."
+    - name: info-logs-kept
+      description: "Info log records are still exported"
+      type: file
+      source: validation/validate-info-logs-kept.sh
+      hint: "The filter must drop only records below Info."
+    - name: generator-unchanged
+      description: "The shuttle-logs Deployment still has its two containers and its original image"
+      type: file
+      source: validation/validate-generator-unchanged.sh
+      hint: "Fix the Collector. Do not edit shuttle-logs."
+
+teardown:
+  keepCluster: false

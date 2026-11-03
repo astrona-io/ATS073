@@ -21,6 +21,10 @@ This section teaches you how OpenTelemetry gives attribute names, values and uni
 - Use the HTTP, RPC, database and messaging conventions.
 - Place Kubernetes and cloud attributes on the resource and keep custom attributes in a team namespace.
 - Rename and sanitize attributes with the transform processor.
+- List the sources of resource attributes and how they are merged.
+- Configure resource detectors in the Collector and explain the override setting.
+- Explain what a schema URL states and who translates between versions.
+- Use stability levels and `OTEL_SEMCONV_STABILITY_OPT_IN` to migrate attribute names.
 
 ---
 
@@ -47,6 +51,18 @@ This section teaches you how OpenTelemetry gives attribute names, values and uni
 *   **Lab:** `sections/section-020/module-02/labs/lab-01` (UNTESTED). Rename database attributes and remove literal values from query text with the transform processor.
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-02/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 3. Resource Detection, Schema URLs And Stability
+*   **Module Reader:** **Module 3: Resource Detection, Schema URLs And Stability**
+*   **Hands-on Playground:** `sections/section-020/module-03/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-03/playground
+    ```
+*   **Lab:** `sections/section-020/module-03/labs/lab-01` (UNTESTED). Add the resourcedetection processor and an environment name to a Collector.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-020/module-03/labs/lab-01
     astrona submit -c .
     ```
 

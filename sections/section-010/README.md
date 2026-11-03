@@ -22,6 +22,10 @@ This section teaches you what the three OpenTelemetry signals record, how a piec
 - Choose span kind, status, events and links.
 - Compare head sampling and tail sampling and configure tail sampling in a Collector.
 - State what a set of sampled traces can and cannot prove.
+- Name the metric instruments and data point kinds, and explain cumulative and delta temporality.
+- Read a log record, its severity number and the fields that correlate it with a trace.
+- Distinguish span events, log-based events and profiles, and choose the signal that fits a question.
+- Filter log records by severity in a Collector.
 
 ---
 
@@ -48,6 +52,18 @@ This section teaches you what the three OpenTelemetry signals record, how a piec
 *   **Lab:** `sections/section-010/module-02/labs/lab-01` (UNTESTED). Replace a head sampler with tail sampling in a Collector.
     ```bash
     astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-02/labs/lab-01
+    astrona submit -c .
+    ```
+
+### 3. Metrics, Logs, Events And Profiles In Depth
+*   **Module Reader:** **Module 3: Metrics, Logs, Events And Profiles In Depth**
+*   **Hands-on Playground:** `sections/section-010/module-03/playground` - kind cluster for this module. Nothing to submit.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-03/playground
+    ```
+*   **Lab:** `sections/section-010/module-03/labs/lab-01` (UNTESTED). Filter debug log records out of a logs pipeline in a Collector.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS073.git -c sections/section-010/module-03/labs/lab-01
     astrona submit -c .
     ```
 

@@ -54,6 +54,20 @@ sections:
     sources:
     - reading: sections/section-010/module-02/course.md
       adapted_from: null
+  - id: module-03
+    title: "Metrics, Logs, Events And Profiles In Depth"
+    objectives:
+    - Name the metric instruments and data point kinds and explain cumulative and delta temporality.
+    - Read the fields of a log record, its severity scale and its correlation fields.
+    - Distinguish span events, log-based events and profiles.
+    - Filter log records by severity in a Collector.
+    outline:
+    - "Metrics, Logs, Events And Profiles In Depth"
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-010/module-03/course.md
+      adapted_from: null
 - id: section-020
   title: Semantic Conventions
   curriculum_item: Semantic Conventions
@@ -87,6 +101,20 @@ sections:
     sources:
     - reading: sections/section-020/module-02/course.md
       adapted_from: null
+  - id: module-03
+    title: "Resource Detection, Schema URLs And Stability"
+    objectives:
+    - List the sources of resource attributes and their precedence.
+    - Configure resource detectors and the override setting.
+    - Explain schema URLs and schema translation.
+    - Use stability levels and the opt-in setting to migrate names.
+    outline:
+    - "Resource Detection, Schema URLs And Stability"
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-020/module-03/course.md
+      adapted_from: null
 - id: section-030
   title: Instrumentation
   curriculum_item: Instrumentation
@@ -119,6 +147,20 @@ sections:
     module_lab: true
     sources:
     - reading: sections/section-030/module-02/course.md
+      adapted_from: null
+  - id: module-03
+    title: "Zero-Code Instrumentation, Propagators And Baggage"
+    objectives:
+    - Start a program with zero-code instrumentation and configure it with environment variables.
+    - Explain context propagation, propagators and the traceparent header.
+    - Use baggage and state its limits.
+    - Explain parent-based samplers.
+    outline:
+    - "Zero-Code Instrumentation, Propagators And Baggage"
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-030/module-03/course.md
       adapted_from: null
 - id: section-040
   title: Analysis and Outcomes
@@ -160,4 +202,18 @@ sections:
     module_lab: true
     sources:
     - reading: sections/section-040/module-02/course.md
+      adapted_from: null
+  - id: module-03
+    title: "Alerting And Burn-Rate"
+    objectives:
+    - Write a Prometheus alerting rule with for, labels and annotations.
+    - Compute an error budget and a burn rate and choose multiwindow thresholds.
+    - Decide between a page and a ticket for symptom and cause alerts.
+    - Explain Alertmanager routing and troubleshoot a missing alert.
+    outline:
+    - "Alerting And Burn-Rate"
+    playground: true
+    module_lab: true
+    sources:
+    - reading: sections/section-040/module-03/course.md
       adapted_from: null

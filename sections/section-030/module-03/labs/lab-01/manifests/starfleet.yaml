@@ -1,0 +1,138 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: starfleet
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: billing-apps
+  namespace: starfleet
+data:
+  server.py: |
+    from flask import Flask
+    from opentelemetry import baggage, trace
+
+    app = Flask(__name__)
+
+
+    @app.route("/charge")
+    def charge():
+        tier = baggage.get_baggage("customer.tier")
+        trace.get_current_span().set_attribute("customer.tier", tier or "none")
+        return {"status": "charged"}
+
+
+    app.run(host="0.0.0.0", port=8080)
+  client.py: |
+    import time
+
+    import requests
+    from opentelemetry import baggage, context
+
+    context.attach(baggage.set_baggage("customer.tier", "gold"))
+
+    while True:
+        try:
+            requests.get("http://shuttle-billing:8080/charge", timeout=5)
+        except requests.RequestException:
+            pass
+        time.sleep(1)
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuttle-billing
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuttle-billing
+  template:
+    metadata:
+      labels:
+        app: shuttle-billing
+    spec:
+      containers:
+        - name: app
+          image: python:3.13-slim
+          command:
+            - sh
+            - -c
+            - pip install --no-cache-dir -q flask requests opentelemetry-distro==0.66b2 opentelemetry-exporter-otlp==1.45.2 opentelemetry-instrumentation-flask==0.66b2 opentelemetry-instrumentation-requests==0.66b2 && exec opentelemetry-instrument python /app/server.py
+          env:
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "http/protobuf"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.observability:4318"
+            - name: OTEL_METRICS_EXPORTER
+              value: "none"
+            - name: OTEL_LOGS_EXPORTER
+              value: "none"
+            - name: OTEL_SERVICE_NAME
+              value: "shuttle-billing"
+            - name: OTEL_PROPAGATORS
+              value: "none"
+          volumeMounts:
+            - name: app
+              mountPath: /app
+      volumes:
+        - name: app
+          configMap:
+            name: billing-apps
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: shuttle-billing
+  namespace: starfleet
+spec:
+  selector:
+    app: shuttle-billing
+  ports:
+    - port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: shuttle-client
+  namespace: starfleet
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shuttle-client
+  template:
+    metadata:
+      labels:
+        app: shuttle-client
+    spec:
+      containers:
+        - name: app
+          image: python:3.13-slim
+          command:
+            - sh
+            - -c
+            - pip install --no-cache-dir -q flask requests opentelemetry-distro==0.66b2 opentelemetry-exporter-otlp==1.45.2 opentelemetry-instrumentation-flask==0.66b2 opentelemetry-instrumentation-requests==0.66b2 && exec opentelemetry-instrument python /app/client.py
+          env:
+            - name: OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "http/protobuf"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://otel-collector.observability:4318"
+            - name: OTEL_METRICS_EXPORTER
+              value: "none"
+            - name: OTEL_LOGS_EXPORTER
+              value: "none"
+            - name: OTEL_SERVICE_NAME
+              value: "shuttle-client"
+            - name: OTEL_PROPAGATORS
+              value: "tracecontext,baggage"
+          volumeMounts:
+            - name: app
+              mountPath: /app
+      volumes:
+        - name: app
+          configMap:
+            name: billing-apps

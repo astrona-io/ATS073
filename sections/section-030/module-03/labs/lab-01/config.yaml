@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Repair A Broken Trace Between Two Services (LAB). Graded against the live cluster. Built untested.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-073-lab-030-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.8
+    preloadImages:
+      - otel/opentelemetry-collector-contrib:0.164.0
+      - python:3.13-slim
+
+bootstrap:
+  init:
+    - name: seed-cluster
+      description: "Create the Collector and the two services, with propagation turned off on the server"
+      type: file
+      source: bootstrap/01-seed-cluster.sh
+
+# Applied only by `astrona test`: the reference solution.
+testing:
+  init:
+    - name: apply-solution
+      description: Apply the reference solution
+      type: file
+      source: solution/apply.sh
+    - name: wait-for-settled
+      description: Wait until the reference solution has produced the expected output
+      type: file
+      source: testing/wait-for-settled.sh
+
+validation:
+  scripts:
+    - name: collector-available
+      description: "The Collector Deployment is available with its original image"
+      type: file
+      source: validation/validate-collector-available.sh
+      hint: "Do not delete or replace the Collector."
+    - name: propagators-set
+      description: "The server propagators include tracecontext and baggage"
+      type: file
+      source: validation/validate-propagators-set.sh
+      hint: "Set OTEL_PROPAGATORS on the Deployment shuttle-billing with kubectl set env."
+    - name: trace-connected
+      description: "A server span shares its trace ID with a client span and has a parent"
+      type: file
+      source: validation/validate-trace-connected.sh
+      hint: "Wait for the new pod, then submit again. The server must extract the traceparent header."
+    - name: baggage-arrives
+      description: "The server spans carry customer.tier gold"
+      type: file
+      source: validation/validate-baggage-arrives.sh
+      hint: "Both tracecontext and baggage must be in the propagator list, and the new pod must be running."
+    - name: workloads-unchanged
+      description: "The client and the server keep their images and the client keeps its propagators"
+      type: file
+      source: validation/validate-workloads-unchanged.sh
+      hint: "Change only the propagators of the server."
+
+teardown:
+  keepCluster: false
