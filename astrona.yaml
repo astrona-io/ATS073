@@ -64,7 +64,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 20m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, collector, pipelines, resource-processor, debug-exporter]
         learning_goals:
           - "Add metrics and logs pipelines to a Collector that only processes traces"
@@ -100,7 +100,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 25m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, collector, tail-sampling, traces]
         learning_goals:
           - "Replace a head sampler with the tail_sampling processor"
@@ -141,7 +141,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 25m
         topic: observability
-        task_kind: fix
+        task_kind: build
         tags: [opentelemetry, collector, logs, filter]
         learning_goals:
           - "Add the filter processor to the logs pipeline"
@@ -165,7 +165,7 @@ modules:
         difficulty: advanced
         estimated_duration: 35m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, collector, sampling, resource-processor, evidence]
         learning_goals:
           - "Add the missing metrics pipeline and set resource attributes in every pipeline"
@@ -212,7 +212,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 20m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, semantic-conventions, attributes-processor, collector, privacy]
         learning_goals:
           - "Copy old attribute names to the current convention names and keep the value types"
@@ -248,7 +248,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 25m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, collector, transform-processor, semantic-conventions]
         learning_goals:
           - "Rename attributes to the current database convention with the transform processor"
@@ -313,7 +313,7 @@ modules:
         difficulty: advanced
         estimated_duration: 35m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, semantic-conventions, cardinality, privacy, resource-processor]
         learning_goals:
           - "Rename old attribute names on spans while keeping the integer status code"
@@ -360,7 +360,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 25m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, python, otel-environment-variables, otlp, service-name]
         learning_goals:
           - "Match the OTLP endpoint to the exporter protocol"
@@ -399,7 +399,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 30m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, python, api, spans, metrics]
         learning_goals:
           - "Give a span the kind Server"
@@ -434,7 +434,7 @@ modules:
         difficulty: intermediate
         estimated_duration: 30m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, propagators, baggage, zero-code]
         learning_goals:
           - "Find why a server span starts a new trace"
@@ -461,7 +461,7 @@ modules:
         difficulty: advanced
         estimated_duration: 40m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [opentelemetry, python, sampler, sdk-disabled, otlp, troubleshooting]
         learning_goals:
           - "Find three different causes of missing telemetry in the environments of three Deployments"
@@ -612,7 +612,7 @@ modules:
         difficulty: advanced
         estimated_duration: 40m
         topic: observability
-        task_kind: fix
+        task_kind: troubleshooting
         tags: [prometheus, promql, histogram, scrape-health, latency-sli]
         learning_goals:
           - "Fix a scrape job that targets the wrong port and confirm up is 1"
